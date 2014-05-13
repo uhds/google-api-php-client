@@ -82,11 +82,8 @@ class Google_IO_Curl extends Google_IO_Abstract
     }
     $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 
-    if (stripos($response, "HTTP/1.0 200 Connection established\r\n\r\n") !== false) {
-        $response = str_ireplace("HTTP/1.0 200 Connection established\r\n\r\n", '', $response);
-    }
-
-    list($responseHeaderString, $responseBody) = explode("\r\n\r\n", $response, 2);
+    $responseBody = substr($response, $headerSize);
+    $responseHeaderString = substr($response, 0, $headerSize);
     $responseHeaders = $this->getHttpResponseHeaders($responseHeaderString);
     $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
